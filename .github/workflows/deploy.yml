@@ -24,38 +24,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Descargar código
-        uses: actions/checkout@v4
-      - name: Preparar Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: |
-            backend/package-lock.json
-            frontend/package-lock.json
-      - name: Instalar dependencias del backend
-        run: npm ci
-        working-directory: backend
-      - name: Instalar dependencias del frontend
-        run: npm ci
-        working-directory: frontend
-      - name: Revisar sintaxis del backend
-        run: node --check src/index.js
-        working-directory: backend
-      - name: Revisar sintaxis del frontend
-        run: node --check server.js
-        working-directory: frontend
-      - name: Compilar frontend
-        run: npm run build
-        working-directory: frontend
-
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: check
     runs-on: ubuntu-latest
     steps:
       - name: Descargar código
@@ -81,15 +51,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Compilar frontend
         if: steps.gate.outputs.skip != 'true'
-        working-directory: frontend
         run: |
-          echo "Instalando dependencias del frontend..."
-          npm ci
-          echo "Compilando frontend..."
-          npm run build
+          echo "Revisando sintaxis..."
+          node --check backend/src/index.js
+          node --check frontend/server.js
+          echo "Instalando y compilando el frontend..."
+          npm ci --prefix frontend
+          npm run build --prefix frontend
           echo "Frontend compilado."
 
       - name: Preparar SSH
