@@ -97,7 +97,7 @@ export default function App() {
       <header className="hero">
         <div>
           <p className="eyebrow">Prueba de despliegue</p>
-          <h1>Notas v4</h1>
+          <h1>Notas v5</h1>
           <p className="lede">
             Este texto llegó solo con un push a main. No hubo que entrar al servidor.
           </p>
