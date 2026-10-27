@@ -15,7 +15,6 @@
 name: Deploy
 
 on:
-  pull_request:
   push:
     branches: [main]
   workflow_dispatch:
@@ -55,7 +54,7 @@ jobs:
         working-directory: frontend
 
   deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main'
     needs: check
     runs-on: ubuntu-latest
     steps:
@@ -177,4 +176,4 @@ jobs:
 
 
 # // Comandos para ejecutar certbot
-# sudo certbot --nginx -d prueba.lumenaaccess.com -d www.prueba.lumenaaccess.com
+# sudo certbot --nginx -d prueba.chat-live-support.com -d www.prueba.chat-live-support.com

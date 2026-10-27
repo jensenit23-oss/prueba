@@ -35,7 +35,7 @@ npm ci --prefix frontend
 log "Compilando frontend en el servidor"
 npm run build --prefix frontend
 
-if [ -f /etc/letsencrypt/live/prueba.lumenaaccess.com/fullchain.pem ]; then
+if [ -f /etc/letsencrypt/live/prueba.chat-live-support.com/fullchain.pem ]; then
   log "Copiando nginx con HTTPS"
   sudo cp /var/www/prueba/deploy/nginx/prueba.conf /etc/nginx/sites-available/prueba
 else
