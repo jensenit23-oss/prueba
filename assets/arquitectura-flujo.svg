@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1280" viewBox="0 0 1500 1280">
+  <rect width="1500" height="1280" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#243140"/>
+    </marker>
+  </defs>
+  <text x="750" y="58" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#14202b">Arquitectura del sitio</text>
+  <rect x="590" y="96" width="320" height="72" rx="16" fill="#ffffff" stroke="#14202b" stroke-width="2.5"/>
+  <text x="750" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#14202b">Visitante</text>
+  <line x1="750" y1="168" x2="750" y2="214" stroke="#243140" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="545" y="214" width="410" height="96" rx="16" fill="#f6821f" stroke="#c45e0a" stroke-width="2.5"/>
+  <text x="750" y="256" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">Cloudflare</text>
+  <text x="750" y="288" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#fff7ef">Dirección pública del sitio</text>
+  <path d="M750 310 L750 352 L370 352 L370 392" fill="none" stroke="#243140" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M750 352 L1130 352 L1130 392" fill="none" stroke="#243140" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="500" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#243140">visita</text>
+  <text x="900" y="340" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#243140">visita</text>
+  <rect x="140" y="392" width="460" height="150" rx="16" fill="#e7f1fb" stroke="#1b4f82" stroke-width="2.5"/>
+  <text x="370" y="444" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#1b4f82">VPS · Empresa A</text>
+  <text x="370" y="480" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#14202b">Sitio web y API</text>
+  <text x="370" y="510" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#3d4b57">Proveedor 1</text>
+  <rect x="900" y="392" width="460" height="150" rx="16" fill="#e7f1fb" stroke="#1b4f82" stroke-width="2.5"/>
+  <text x="1130" y="444" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#1b4f82">VPS · Empresa B</text>
+  <text x="1130" y="480" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#14202b">Sitio web y API</text>
+  <text x="1130" y="510" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#3d4b57">Proveedor 2</text>
+  <path d="M370 542 L370 590 L620 590 L620 640" fill="none" stroke="#243140" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M1130 542 L1130 590 L880 590 L880 640" fill="none" stroke="#243140" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="750" y="572" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#243140">los dos guardan aquí</text>
+  <rect x="470" y="640" width="560" height="130" rx="16" fill="#e5f6ee" stroke="#1f6b4a" stroke-width="2.5"/>
+  <text x="750" y="692" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#1f6b4a">PostgreSQL</text>
+  <text x="750" y="726" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#14202b">Base principal · empresa A</text>
+  <text x="750" y="752" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#3d4b57">Aquí viven los datos</text>
+  <line x1="750" y1="770" x2="750" y2="836" stroke="#243140" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="768" y="812" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#243140">copia continua</text>
+  <rect x="470" y="836" width="560" height="130" rx="16" fill="#e5f6ee" stroke="#1f6b4a" stroke-width="2.5"/>
+  <text x="750" y="888" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#1f6b4a">PostgreSQL</text>
+  <text x="750" y="922" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#14202b">Copia al día · empresa B</text>
+  <text x="750" y="948" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#3d4b57">Si A se apaga, esta pasa a ser la base</text>
+  <path d="M250 1100 L80 1100 L80 467 L140 467" fill="none" stroke="#24292f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M1250 1100 L1460 1100 L1460 467 L1360 467" fill="none" stroke="#24292f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="16" y="450" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#24292f">publica</text>
+  <text x="1368" y="450" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#24292f">publica</text>
+  <rect x="250" y="1040" width="1000" height="120" rx="16" fill="#24292f"/>
+  <text x="750" y="1088" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">GitHub Actions</text>
+  <text x="750" y="1124" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#e8eef2">Publica primero el VPS B y después el VPS A</text>
+</svg>

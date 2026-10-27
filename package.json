@@ -1,0 +1,11 @@
+{
+  "name": "prueba",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "railway": "^3.16.0"
+  }
+}

@@ -1,0 +1,193 @@
+:root {
+  color: #17212b;
+  background: #e7eef2;
+  font-family: "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.page {
+  width: min(760px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 64px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #5d6b76;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: 3rem;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.lede {
+  max-width: 46ch;
+  margin: 12px 0 0;
+  color: #3d4b57;
+}
+
+.badge {
+  min-width: 148px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  display: grid;
+  gap: 2px;
+}
+
+.badge span {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.badge strong {
+  font-size: 1.25rem;
+}
+
+.badge-local {
+  background: #d7e8fb;
+  color: #0d3b66;
+}
+
+.badge-prod {
+  background: #d7f3e3;
+  color: #0d5a34;
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  color: #3d4b57;
+}
+
+.status p,
+.muted {
+  margin: 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(23, 33, 43, 0.06);
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-weight: 650;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid #d5dee6;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f8fbfc;
+  color: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: #145c63;
+  color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.ghost {
+  background: transparent;
+  color: #8d2f2f;
+  padding-inline: 10px;
+}
+
+.error {
+  color: #8d2f2f;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.note {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px;
+}
+
+.note h2,
+.note p {
+  margin: 0;
+}
+
+.note p {
+  margin-top: 6px;
+  white-space: pre-wrap;
+}
+
+time {
+  display: block;
+  margin-top: 10px;
+  color: #6b7883;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .note,
+  .status {
+    display: grid;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+  }
+}

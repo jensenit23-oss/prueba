@@ -1,0 +1,23 @@
+{
+  "name": "prueba-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "start:prod": "cross-env APP_MODE=production NODE_ENV=production PORT=3001 PGDATABASE=prueba_prod node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

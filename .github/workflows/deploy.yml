@@ -1,0 +1,85 @@
+name: Deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: railway-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+            frontend/package-lock.json
+      - run: npm ci
+      - run: npm ci
+        working-directory: backend
+      - run: npm ci
+        working-directory: frontend
+      - run: node --check src/index.js
+        working-directory: backend
+      - run: node --check server.js
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+
+  deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm install -g @railway/cli@5.71.0
+      - name: Require Railway token
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "Falta el secret RAILWAY_TOKEN en el repositorio."
+            exit 1
+          fi
+      - name: Apply Railway project
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway config apply --yes
+      - name: Deploy backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service backend --ci
+      - name: Deploy frontend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service frontend --ci
+      - name: Ensure frontend domain
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            list=$(railway domain list --service frontend --json || true)
+            echo "$list"
+            if echo "$list" | grep -q "railway.app"; then
+              exit 0
+            fi
+            if railway domain --service frontend --json; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "No se pudo crear el dominio del frontend."
+          exit 1
