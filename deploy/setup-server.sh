@@ -36,10 +36,10 @@ EOF
   chown "$APP_USER:$APP_USER" "$APP_DIR/backend/.env"
 fi
 
-if [ -f /etc/nginx/sites-available/prueba ] && grep -q ssl_certificate /etc/nginx/sites-available/prueba; then
-  echo "Nginx ya tiene certificado. Se deja la config de Certbot."
-elif [ -f "$APP_DIR/deploy/nginx/prueba.conf" ]; then
+if [ -f /etc/letsencrypt/live/prueba.lumenaaccess.com/fullchain.pem ] && [ -f "$APP_DIR/deploy/nginx/prueba.conf" ]; then
   cp "$APP_DIR/deploy/nginx/prueba.conf" /etc/nginx/sites-available/prueba
+elif [ -f "$APP_DIR/deploy/nginx/prueba.http.conf" ]; then
+  cp "$APP_DIR/deploy/nginx/prueba.http.conf" /etc/nginx/sites-available/prueba
 fi
 if [ -f /etc/nginx/sites-available/prueba ]; then
   ln -sfn /etc/nginx/sites-available/prueba /etc/nginx/sites-enabled/prueba

@@ -19,10 +19,10 @@ npm ci --omit=dev --prefix backend
 npm ci --prefix frontend
 npm run build --prefix frontend
 
-if [ -f /etc/nginx/sites-available/prueba ] && grep -q ssl_certificate /etc/nginx/sites-available/prueba; then
-  echo "Nginx ya tiene certificado. Se deja la config de Certbot."
-else
+if [ -f /etc/letsencrypt/live/prueba.lumenaaccess.com/fullchain.pem ]; then
   sudo cp /var/www/prueba/deploy/nginx/prueba.conf /etc/nginx/sites-available/prueba
+else
+  sudo cp /var/www/prueba/deploy/nginx/prueba.http.conf /etc/nginx/sites-available/prueba
 fi
 sudo ln -sfn /etc/nginx/sites-available/prueba /etc/nginx/sites-enabled/prueba
 sudo rm -f /etc/nginx/sites-enabled/default
