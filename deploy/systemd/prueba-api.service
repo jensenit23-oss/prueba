@@ -1,0 +1,15 @@
+[Unit]
+Description=API de prueba
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=prueba
+WorkingDirectory=/var/www/prueba/backend
+EnvironmentFile=/var/www/prueba/backend/.env
+ExecStart=/usr/bin/node src/index.js
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,3 +1,17 @@
+# Automatización con deploy de github
+
+# // Generar key
+# ssh-keygen -t rsa -b 4096 -C "jensen.it23@gmail.com"
+
+# // Configuración publica
+# ssh-copy-id -i ~/.ssh/id_rsa root@37.27.158.199
+
+# // Obtener key publica
+# cat ~/.ssh/id_rsa.pub
+
+# // Obtener key privada
+# cat ~/.ssh/id_rsa
+
 name: Deploy
 
 on:
@@ -7,7 +21,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: railway-${{ github.ref }}
+  group: deploy-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -20,10 +34,8 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: |
-            package-lock.json
             backend/package-lock.json
             frontend/package-lock.json
-      - run: npm ci
       - run: npm ci
         working-directory: backend
       - run: npm ci
@@ -41,45 +53,100 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - id: gate
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$SSH_KEY" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Deploy omitido. Faltan los secrets SSH_HOST, SSH_USER o SSH_KEY."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-node@v4
+        if: steps.gate.outputs.skip != 'true'
         with:
           node-version: 22
-      - run: npm ci
-      - run: npm install -g @railway/cli@5.71.0
-      - name: Require Railway token
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Build frontend
+        if: steps.gate.outputs.skip != 'true'
+        working-directory: frontend
         run: |
-          if [ -z "$RAILWAY_TOKEN" ]; then
-            echo "Falta el secret RAILWAY_TOKEN en el repositorio."
-            exit 1
-          fi
-      - name: Apply Railway project
+          npm ci
+          npm run build
+
+      - name: Prepare SSH
+        if: steps.gate.outputs.skip != 'true'
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway config apply --yes
-      - name: Deploy backend
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service backend --ci
-      - name: Deploy frontend
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway up --service frontend --ci
-      - name: Ensure frontend domain
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          for attempt in 1 2 3 4 5 6; do
-            list=$(railway domain list --service frontend --json || true)
-            echo "$list"
-            if echo "$list" | grep -q "railway.app"; then
-              exit 0
-            fi
-            if railway domain --service frontend --json; then
-              exit 0
-            fi
-            sleep 10
-          done
-          echo "No se pudo crear el dominio del frontend."
-          exit 1
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          sudo apt-get update
+          sudo apt-get install -y rsync
+
+      - name: Prepare server directories
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new "${SSH_USER}@${SSH_HOST}" "mkdir -p /var/www/prueba/backend /var/www/prueba/frontend /var/www/prueba/deploy"
+
+      - name: Upload project
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          rsync -az --delete \
+            --exclude node_modules \
+            --exclude dist \
+            --exclude .env \
+            --exclude .git \
+            -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new" \
+            ./backend/ "${SSH_USER}@${SSH_HOST}:/var/www/prueba/backend/"
+          rsync -az --delete \
+            --exclude node_modules \
+            --exclude .env \
+            -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new" \
+            ./frontend/ "${SSH_USER}@${SSH_HOST}:/var/www/prueba/frontend/"
+          rsync -az \
+            -e "ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new" \
+            ./deploy/ "${SSH_USER}@${SSH_HOST}:/var/www/prueba/deploy/"
+
+      - name: Generate .env file on server
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new "${SSH_USER}@${SSH_HOST}" << 'EOF'
+          mkdir -p /var/www/prueba/backend
+          echo "APP_MODE=${{ vars.APP_MODE }}" > /var/www/prueba/backend/.env
+          echo "NODE_ENV=${{ vars.NODE_ENV }}" >> /var/www/prueba/backend/.env
+          echo "PORT=${{ vars.PORT }}" >> /var/www/prueba/backend/.env
+          echo "PGHOST=${{ vars.PGHOST }}" >> /var/www/prueba/backend/.env
+          echo "PGPORT=${{ vars.PGPORT }}" >> /var/www/prueba/backend/.env
+          echo "PGUSER=${{ vars.PGUSER }}" >> /var/www/prueba/backend/.env
+          echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" >> /var/www/prueba/backend/.env
+          echo "PGDATABASE=${{ vars.PGDATABASE }}" >> /var/www/prueba/backend/.env
+          echo "CORS_ORIGIN=${{ vars.CORS_ORIGIN }}" >> /var/www/prueba/backend/.env
+          chmod 600 /var/www/prueba/backend/.env
+          EOF
+
+      - name: Restart API and nginx
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=accept-new "${SSH_USER}@${SSH_HOST}" "bash /var/www/prueba/deploy/update.sh"
+
+
+# // Comandos para ejecutar certbot
+# sudo certbot --nginx -d prueba.lumenaaccess.com -d www.prueba.lumenaaccess.com
