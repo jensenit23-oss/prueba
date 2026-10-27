@@ -36,7 +36,7 @@ EOF
   chown "$APP_USER:$APP_USER" "$APP_DIR/backend/.env"
 fi
 
-if [ -f /etc/letsencrypt/live/prueba.lumenaaccess.com/fullchain.pem ] && [ -f "$APP_DIR/deploy/nginx/prueba.conf" ]; then
+if [ -f /etc/letsencrypt/live/prueba.chat-live-support.com/fullchain.pem ] && [ -f "$APP_DIR/deploy/nginx/prueba.conf" ]; then
   cp "$APP_DIR/deploy/nginx/prueba.conf" /etc/nginx/sites-available/prueba
 elif [ -f "$APP_DIR/deploy/nginx/prueba.http.conf" ]; then
   cp "$APP_DIR/deploy/nginx/prueba.http.conf" /etc/nginx/sites-available/prueba
