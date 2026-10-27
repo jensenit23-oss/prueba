@@ -30,10 +30,13 @@ fi
 cd /var/www/prueba
 log "Instalando dependencias del backend"
 npm ci --omit=dev --prefix backend
-log "Instalando dependencias del frontend"
-npm ci --prefix frontend
-log "Compilando frontend en el servidor"
-npm run build --prefix frontend
+if [ -f frontend/dist/index.html ]; then
+  log "El frontend ya viene compilado"
+else
+  log "Compilando frontend en el servidor"
+  npm ci --prefix frontend
+  npm run build --prefix frontend
+fi
 
 if [ -f /etc/letsencrypt/live/prueba.chat-live-support.com/fullchain.pem ]; then
   log "Copiando nginx con HTTPS"
