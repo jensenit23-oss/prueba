@@ -97,10 +97,9 @@ export default function App() {
       <header className="hero">
         <div>
           <p className="eyebrow">Prueba de despliegue</p>
-          <h1>Notas</h1>
+          <h1>Notas v2</h1>
           <p className="lede">
-            La misma aplicación, con PostgreSQL, en dos modos. Lo que escribas aquí
-            solo existe en este entorno.
+            Este texto llegó solo con un push a main. No hubo que entrar al servidor.
           </p>
         </div>
         <div className={`badge ${isProduction ? "badge-prod" : "badge-local"}`}>
