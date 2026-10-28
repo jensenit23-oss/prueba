@@ -145,7 +145,7 @@ export default function App() {
       {error && <p className="error">{error}</p>}
 
       <section className="list">
-        {loading && <p className="muted">Cargando notas...</p>}
+        {loading && <p className="muted">Cargando...</p>}
         {!loading && notes.length === 0 && <p className="muted">Todavía no hay notas.</p>}
         {notes.map((note) => (
           <article className="card note" key={note.id}>
